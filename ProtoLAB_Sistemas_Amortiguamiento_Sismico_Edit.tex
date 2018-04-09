@@ -1,0 +1,803 @@
+\documentclass[10pt, a4paper, twocolumn]{article} % 10pt font size (11 and 12 also possible), A4 paper (letterpaper for US letter) and two column layout (remove for one column)
+\usepackage[hidelinks]{hyperref}
+\input{structure.tex} % Specifies the document structure and loads requires packages
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE INFORMATION
+%----------------------------------------------------------------------------------------
+
+\title{Prototipo de Sistemas de Amortiguamiento Sísmico} % The article title
+
+\author{
+	\authorstyle{ProtoLAB\textsuperscript{1}, Aula CIMNE UG\textsuperscript{1}} % Authors
+	\newline\newline % Space before instittions
+	\textsuperscript{1}\institution{Universidad de Guanajuato, Guanajuato, México}\\ % Institution 1
+}
+
+% Example of a one line author/institution relationship
+%\author{\newauthor{John Marston} \newinstitution{Universidad Nacional Autónoma de México, Mexico City, Mexico}}
+
+\date{Septiembre, 2017} % Add a date here if you would like one to appear underneath the title block, use \today for the current date, leave empty for no date
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Print the title
+
+\thispagestyle{firstpage} % Apply the page style for the first page (no headers and footers)
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT
+%----------------------------------------------------------------------------------------
+
+\lettrineabstract{Al paso del tiempo, la metodología para resolver problemas de ingeniería ha crecido a pasos agigantados. Permitiendo acercarnos hacia terrenos no explorados. La ingeniería civil no es la excepción, el trabajo colectivo con otras  disciplinas nos ha enriquecido bastante. Con el objeto de entender los fenómenos sísmicos con los que convivimos, desarrollamos un prototipo que simula el comportamiento de una estructura sometida a fuerzas laterales variables para registrar la aceleración en la parte de arriba del edificio y a partir de estos datos obtener un acelerograma para poder calcular los desplazamientos que sufre el modelo. En este reporte, se documenta la secuencia del proyecto así como el trabajo a futuro.}
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE CONTENTS1
+%----------------------------------------------------------------------------------------
+
+\section{Justificación}
+
+Durante años, la ingeniería civil ha intentado ``convivir'' con los terremotos mediante técnicas empíricas que ayuden a aminorar los daños que este pueda causar. \\ %El ser humano al buscar mejores formas de vida y creando grandes edificaciones, se ve obligado a tratar con estos fenómenos naturales, de manera que se mantenga la integridad y confiabilidad estructural.%
+Como una forma de involucrar a los estudiantes de ingeniería en estos tópicos, el grupo \textit{ProtoLAB} de la Universidad de Guanajuato replicó \footnote{Referencia de YouTube: Practical Engineering} un prototipo que en su primera etapa muestra como se registran las aceleraciones en la parte más alta de un edificio y cómo es que se hacen los acelerogramas. En la segunda etapa se espera mostrar la eficiencia de los sistemas de amortiguamiento en un``edificio" bajo la acción de fuerzas sísmicas.
+
+%------------------------------------------------
+\subsection{Objetivo}
+El objetivo,en una primera etapa, es modelar el comportamiento de una estructura y registrar su aceleración en un periodo de tiempo para obtener la gráfica de aceleración-tiempo del prototipo en la parte superior mediante un acelerómetro de tres ejes (3 DOF). %Las señales que emita el sensor, serán procesadas inicialmente por un microcontrolador y posteriormente visualizadas en una computadora. 
+En la segunda etapa, implementar un sistema de amortiguamiento para poder demostrar el beneficio que tienen el uso de disipadores de energía en edificios ademas de construir una mesa vibradora para poder controlar las aceleraciones en el modelo.
+
+%------------------------------------------------
+\subsection{Aplicación}
+El proyecto va dirigido a estudiantes de ingeniería civil, concretamente a los alumnos interesados en el área de análisis de estructuras.
+
+
+
+\section{Descripción del Prototipo}
+
+El proyecto se describe como una estructura de madera formada por dos bases cuadradas unidas paralelamente entre sí, mediante cuatro palitos del mismo material de 1cm de diámetro. Al acomodar las piezas de esta manera, la estructura toma forma de un ``edificio'' a escala.\\
+Al aplicar una carga horizontal sobre la base inferior, la parte superior vibrará lo cual se asemeja a un sismo.
+Si se registran las aceleraciones de esa vibración y el momento en el tiempo en el cual ocurren, entonces podremos probar en el modelo mecanismos que nos ayuden a ver qué disipa mejor esas vibraciones.
+En este caso, los ``acelerómetros'' son dispositivos que nos dan la información que necesitamos. El acelerómetro debe ser conectado a un circuito eléctrico que lo haga funcionar y que lo pueda controlar; para ello se tienen los \textit{microcontroladores} como las placas Arduino. 
+
+
+%------------------------------------------------
+
+\section{Materiales}
+
+Para la realización del proyecto se necesita:
+
+Para la conexión:
+\begin{itemize}
+\item Microcontrolador Arduino M$\emptyset$ Pro.\footnote{Puedes conseguirlo en: \url{https://articulo.mercadolibre.com.mx/MLM-577074584-arduino-m0-pro\\
+-original-italia-robotica-envio-gratis-_JM?source=gps}}
+\item Acelerómetro Sparkfun ADXL345.\footnote{Puedes conseguirlo en:\\ \url{https://www.sparkfun.com/products/9836}}
+\item Protoboard.
+\item 12 Jumpers M/H (Macho-Hembra).
+\item 5 Jumpers M/M (Macho-Macho).
+\item 6 cables de 1.0 m (extensores).
+\item Cautín y cable para soldar.
+\item 2 resistencias de 270 ohms
+\end{itemize}
+Los materiales 
+Para el prototipo:
+\begin{itemize}
+\item 4 seguetas de metal de 31.1cm.
+\item Bases cuadradas de madera .
+\item 16 escuadras de 2.54cm.
+\item 8 tornillos de 1.5cm.
+\item 16 pijas de 1.5cm.
+\item Cinta.
+\end{itemize}
+
+
+\section{Definiciones}
+
+A manera de contextualizar al lector en este documento, se detallan algunas partes que componen este prototipo:
+
+\subsection{Microcontrolador Arduino}
+
+Un microcontrolador \textit{Arduino} es una plataforma electrónica de código abierto basada en hardware y software fáciles de usar. Las tarjetas Arduino son capaces de leer entradas y convertirlos en salida. La tarjeta puede entender un conjunto de instrucciones que se envían mediante código y asi controlar diferentes dispositivos que le son conectados. Para ello se utiliza el lenguaje de programación Arduino. En el mercado existen diferentes tipos de placas Arduino, la mayoria realizan las mismas tareas pero otras, tareas muy específicas.
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[scale=.4]{Arduino_M0_Pro.png} % Figure image
+		\caption{Placa Arduino M$\emptyset$ PRO.} % Figure caption
+		\label{fg:arduino}
+	\end{center}
+\end{figure}
+
+
+
+\subsection{Acelerómetro Sparkfun ADXL345}
+
+El ADXL345 es un sensor de aceleraciones de alta resolución de 3 ejes o grados de libertad (3 DOF) pequeño, delgado y de baja potencia con el cual se pueden obtener medidas de hasta +16\textit{g}. El ADXL345 es adecuado para aplicaciones en dispositivos móviles pudiendo medir la aceleración estática de la gravedad en aplicaciones de deteccicón de inclinación, as\'i como la aceleración dinámica proveniente de movimiento o choque. Su alta resolución permite medir cambios de inclinación inferiores a 1.0$^{\circ}$.
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[scale=.4]{ADXL345.png} % Figure image
+		\caption{Aspecto de acelerómetro ADXL345.} % Figure caption
+		\label{fg:adxl345}
+	\end{center}
+\end{figure}
+
+\subsection{Protoboard}
+
+El siguiente paso después de reunir todos los materiales, es conectarlos entre s\'i para formar un circuito eléctrico. Esta conexión se hace mediante una \textit{Protoboard}. Un \textit{protoboard} es un tablero con orificios que se encuentran conectados eléctricamente entre sí de manera interna, habitualmente siguiendo patrones de líneas, en el cual se pueden insertar componentes electrónicos y cables para el armado y prototipado de circuitos electrónicos y sistemas similares. Esto nos ayudará a formar el circuito para que el Arduino pueda enviar y recibir señales desde el acelerometro.
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[scale=1]{protoboard.png} % Figure image
+		\caption{Placa de pruebas o \textit{protoboard}.} % Figure caption
+		\label{fg:protoboard}
+	\end{center}
+\end{figure}
+
+
+
+\section{Conexión del sensor}
+
+La correcta comunicación entre los dispositivos es esencial, esta nos permite la adecuada emisión y recepción de señales entre ellos sin que haya algún daño eléctrico. Para ello existen los \textit{protocolos de comunicación}, estos son estándares para comunicación entre dispositivos.
+La empresa fabricante del acelerómetro (Sparkfun), propone dos protocolos: SPI\footnote{Serial Peripherical Interface} e I2C\footnote{Inter-Integrated Circuit}. Para este proyecto se seguirá el protocolo de comunicación \textit{\textbf{I2C}}:
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=\linewidth]{Acelerometro_bb.png} 
+		\caption{Esquema de conexión del Acelerómetro ADXL345.}
+		\label{fg:conexion}
+	\end{center}
+\end{figure}
+
+Los pasos son los siguientes:
+
+\begin{enumerate}
+    \item Primero, se conecta el extremo de un cable jumper M/M (\textcolor{red}{rojo}) al pin de \textit{3.3V} del Arduino, el otro a cualquier pin de la línea roja (derecha) de la protoboard. Con esto tendremos 3.3V disponibles para distribuir al circuito. Es importante que se conecte al pin de 3.3V, ya que este es el voltaje de trabajo del acelerómetro, de no ser este, podemos afectar la integridad del sensor.
+    \item Con otro jumper M/M color (\textbf{negro}) conectamos el pin \textit{GND} o tierra del Arduino hasta cualquier pin de la línea azul (derecha) de la protoboard, análogamente, tendremos energía ``negativa'' para distribuir. Ojo, en el arduino hay dos pines de tierra: para las señales análogas y las digitales\footnote{Una señal análoga recibe voltajes que dependiendo de su intensidad, se interpretan como datos. Las digitales son datos.}, aquí no importa cuál elijamos.
+    \item   La conexión de los cables anteriores, permiten la disponibilidad de electricidad, lo que sigue es conectar los cables de comunicación entre el Arduino y el acelerómetro. Como se observa en la figura \ref{fg:adxl345}, el acelerómetro tiene 8 pines: GND, VCC, CS, INT1, INT2, SDO, SDA, SCL. Estos son los puertos de entrada y salida de datos, estos son:
+    \begin{itemize}     
+        \item \textit{GND}: Pin de Tierra.
+        \item \textit{VCC}: Pin del Voltaje de suministro, 3.3V.
+        \item \textit{CS}: Selección de chip (\textit{Chip Select}), si está conectado el voltaje a este pin, el sensor reconocerá que se encuentra en el protocolo de comunicación \textit{I2C}.
+        \item \textit{INT1}: Salida del interruptor 1.
+        \item \textit{INT2}: Salida del interruptor 2, son pines de salida de información adicional que puede brindar el sensor, como: \textit{single-tap}, \textit{double-tap}, \textit{actividad}, \textit{inactividad}, etc., de ser requeridas, se captura esta información con jumpers adicionales. Para este proyecto no se utilizarán.
+		\item \textit{SDO}: Salida de datos seriales (\textit{Serial Data Output}).
+        \item \textit{SDA}: Serial data, mediante este pin se obtendrán los datos.
+        \item \textit{SCL}: Reloj de comunicaciones seriales (\textit{Serial Comunnications Clock}).
+    \end{itemize}
+Los cables de comunicación seleccionados serán 6 jumpers, todos M/H: \textcolor{orange}{naranja}, \textcolor{yellow}{amarillo}, \textcolor{purple}{morado}, \textcolor{brown}{café}, \textcolor{blue}{azul} y \textcolor{green}{verde}. (En realidad, se puede usar cualquier color de cable para las conexiones, solo se debe tener bien identificado su aplicación). En las conexiones previas realizadas, introducíamos el extremo ``macho'' al ``hembra'', sin embargo esto no es posible para el acelerómetro, ya que carece de pines ``hembra'' y la sujección es nula. Aquí es donde se usa el \textbf{cautín}, dispositivo para unir dos partes mediante una soldadura. Sabiendo esto, soldamos las puntas de los jumpers al acelerómetro (\textcolor{red}{¡ADVERTENCIA!:} La punta del cautín es muy caliente, manéjese con cuidado). Introducimos la punta ``macho'' del jumper por el frente del sensor, para que la soldadura quede por la parte trasera del mismo, el extremo ``hembra'' del cable quedará suelto. Con cuidado soldamos el jumper y el pin del acelerómetro acercando el cautin, el cable se funde muy rápido y este proceso se debe hacer sin titubear.\\ %INTRODUCIR FIGURA. 
+La correspondencia de los cables con el sensor se identifica de la siguiente manera:
+    \begin{itemize}
+		\item Cable M/H \textcolor{orange}{naranja} $\rightarrow$ Pin SCL.        
+        \item Cable M/H \textcolor{yellow}{amarillo} $\rightarrow$ Pin SDA.
+        \item Cable M/H \textcolor{purple}{morado} $\rightarrow$ Pin SDO.
+        \item Cable M/H \textcolor{brown}{café} $\rightarrow$ Pin CS.
+        \item Cable M/H \textcolor{blue}{azul} $\rightarrow$ Pin VCC.
+        \item Cable M/H \textcolor{green}{verde} $\rightarrow$ Pin GND.
+    \end{itemize}
+Quedando como se muestra en la figura \ref{fg:soldadura}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=\linewidth]{soldado.jpg} 
+		\caption{Acelerometro soldado correspondiente a las instrucciones.}
+		\label{fg:soldadura}
+	\end{center}
+\end{figure}
+
+	\item Hecho esto, se ha concluído con la parte complicada de la conexión. Lo que sigue es completar el circuito. Como se dijo que el sensor debe tener completa movilidad, la conexión actual no lo permite ya que los jumpers son muy cortos. Aquí radica la importancia de los cables extensores: por eso se soldaron jumpers M/H en el acelerómetro, para que en su extremo ``hembra'' se conecte un cable extensor, y en el extremo de estos, la entrada ``hembra'' de otros 6 jumpers M/H (preferentemente del mismo color que los 6 utilizados anteriormente para identificarlos), quedando al final un extremo ``macho''. Así, la longitud de los jumpers soldados al sensor ``se extiende''. Como aclaración, es posible no utilizar los jumpers M/H adicionales utilizados al último, pero no es recomendable porque los cables extensores tienden a no sujetarse en pines ``hembra'', como lo haremos más adelante.
+	\item Los extremos ``macho'' del paso anterior, se conectan en los pines que indica la figura \ref{fg:conexion}.
+	\item Por último necesitamos 5 jumpers M/M, que servirán como puente para pasar la electricidad hacia el acelerómetro, los cuales están indicados en la figura \ref{fg:conexion} de color \textcolor{green}{verde}, \textcolor{blue}{azul}, \textcolor{brown}{café}, \textcolor{orange}{naranja} y \textcolor{yellow}{amarillo}.
+    \item Uno de los requisitos del protocolo de comunicación \textit{I2C} usado, es que existan resistencias en las señales \textit{SDA} y \textit{SCL}, por ello colocamos las dos \textit{resistencias} de 270 $\Omega$ en fila de los cables M/M \textcolor{orange}{naranja} y \textcolor{yellow}{amarillo} conectados en el paso anterior. Estos pequeños dispositivos, también serán el puente de electricidad para las señales SDA y SCL.
+    \item Con esto se ha terminado el proceso de conexión. Lo que queda es conectar un cable USB desde la computadora al puerto \textit{Debug} del Arduino para hacer funcionar el circuito.
+\end{enumerate}
+
+\section{Encendiendo el Acelerómetro}
+
+Descargar e instalar el software de Arduino o \textit{IDE}\footnote{Integrated Development Environment} desde\url{www.arduino.cc}. Este software es una plataforma para programar y enviar los \textit{sketches} o \textit{scripts} que el Arduino ejecuta. El lenguaje de programación del Arduino está basado en el \textit{lenguaje C}, con modificaciones para controlar hardware. El programa que se ejecuta en un Arduino, se llama \textbf{sketch} o \textbf{script} y son archivos con extensión \texttt{.ino}.
+
+En la figura \ref{fg:ide} se ecuentra una vista rápida del IDE y la plantilla genérica para un \textit{script}.
+
+\begin{figure}[htbp!]
+	\begin{center}
+		\includegraphics[scale=.7]{ide_arduino.png} % Figure image
+		\caption{Interfaz del software de Arduino.} % Figure caption
+		\label{fg:ide}
+	\end{center}
+\end{figure}
+
+Al conectar el dispsitivo, se debe indicar al IDE qué tarjeta Arduino vamos a utilizar. Para ello nos dirimos a: \textit{Herramientas $\rightarrow$ Placa:} y seleccionamos de la lista desplegable, la placa Arduino que vamos a utilizar. Para nuestro caso, la placa \textit{Arduino PRO or Arduino PRO Mini}, una vez seleccionado, el IDE instalará los controladores de la placa. Cuando el instalador termine, la lista se habrá actualizado y ahora sí aparecerá el modelo de la placa con la que contamos: \textit{Arduino M$\emptyset$ Pro}
+
+El código para manipular las funciones del acelerómetro así como la lectura de mediciones es proporcionado por la empresa fabricante (Sparkfun), es responsabilidad del usuario controlar los datos. Como en nuestro caso solo necesitamos las mediciones, no abordaremos más allá de este particular.
+
+
+\section{Librerías de \textit{Sparkfun}}
+
+
+\subsection{Descargando la librería}
+\label{subsec:libreria}
+Las librerías de los scripts que controlan al acelerómetro están disponibles para descarga en el siguiente link: \url{www.sparkfun.com/products/adxl345/downloads} en formato ZIP.
+
+\subsection{Incluyendo la librería}
+
+El proceso para incluir una librería en el software de Arduino se detalla a continucación:
+
+\begin{enumerate}
+\item En el IDE del Arduino, dirigirse a la pestaña \textit{Programa/Sketch}.
+\item Luego \textit{Incluir librería/Include library} y en la lista desplegable elegir \textit{Añadir librería .ZIP .../Add .ZIP library} 
+\item En la ventana emergente, buscar la ruta del archivo \textit{ZIP} que descargamos en la sección \ref{subsec:libreria}.
+\item ¡Listo!.
+\end{enumerate}
+
+
+\subsection{Sketches o Scripts}
+
+Una vez incluída la librería, en la ruta \textit{Arhivo$\rightarrow$Ejemplos/File$\rightarrow$Examples} aparecerá un submenú llamado \textit{SparkFun\_ADXL345\_Arduino\_Library} y a su vez, 3 scripts:
+
+\begin{itemize}
+\item \texttt{SparkFun\_ADXL345\_Example.ino}: Toma las lecturas y contiene rutinas para la detección de eventos vinculados a los pines \textit{INT1} e \textit{INT2}.
+\item \texttt{SparkFun\_ADXL345\_Calibration.ino}: Este sketch permite la calibración el dispositivo. 
+\item \texttt{SparkFun\_BabyBlynkMonitorThing.ino}: Ejemplo adicional en el que no se profundizará.
+\end{itemize}
+
+En las secciones siguientes acompañaremos al lector a descubrir el funcionamiento de los primeros dos scripts para que comience a utilizar el ADXL345.
+
+\subsection{SparkFun\_ADXL345\_Example.ino}
+
+\subsubsection{Inicialización}
+
+Al abrir el script, encontraremos las siguientes líneas:
+
+\begin{verbatim}
+#include <SparkFun_ADXL345.h>
+// Incluye la librería de SparkFun
+
+/**** SELECCIÓN DE COMUNICACIÓN ****/
+/* Descomente la línea no usada */
+//ADXL345 adxl = ADXL345(10); // SPI 
+ADXL345 adxl = ADXL345(); // I2C 
+\end{verbatim}
+
+Las cuales indican qué \textit{tipo de comunicación} se usará. La primera es para especificar al dispositivo que se ha hecho la comunicación \textit{SPI}, y la segunda, el protocolo \textit{I2C}. En nuestro caso, comentaremos la primer línea mediante el uso de doble diagonal (//).\textbf{Se debe asegurar que sólo una de estas dos líneas esté comentada.}
+
+\subsubsection{Configuración/Setup}
+
+La parte más compleja del código es la función \texttt{void setup()} sin embargo el usuario sólo modificará ciertas líneas. En esta función, el arduino inicializa todas las variables, preferencias y elementos necesarios para que la placa pueda controlar el acelerómetro. Aquí también se define la precisión del sensor.
+
+
+\begin{verbatim}
+/**** SETUP ****/
+/* Configurar las preferencias de ADXL345 */
+void setup(){
+
+Serial.begin(9600); // Inicia terminal serial
+adxl.powerOn(); // Enciende el ADXL345
+adxl.setRangeSetting(16);           
+    // Configuraciones de rango
+    // Valores aceptados: 2g, 4g, 8g or 16g
+    // Valores altos = Amplio rango de medida
+    // Valores bajos = Sensibilidad mayor
+
+adxl.setSpiBit(0);                  
+// Configura el dispositivo para modo 
+// 4 wire SPI cuando está en '0', o el
+// modo 3 wire SPI mode cuando está en 1                                    
+// Default: Iniciado en 0
+
+adxl.setActivityXYZ(1, 0, 0);
+// Activar detección de movimiento
+// en los ejes
+// (1 == ON, 0 == OFF)
+
+adxl.setActivityThreshold(75);      
+// Fijar lím. de detección de actividad
+// 62.5mg por incremento   
+// Límites de inactividad (0-255)
+
+adxl.setInactivityXYZ(1, 0, 0);     
+// Activar la detección de inactividad 
+// "adxl.setInactivityXYZ(X, Y, Z);" 
+//(1 == ON, 0 == OFF)
+
+adxl.setInactivityThreshold(75);
+// Fijar lím. de detección de inactividad    
+// 62.5mg por incremento  
+// Límites de inactividad (0-255)
+
+adxl.setTimeInactivity(10);
+// ¿Cuántos segundos de no actividad
+// está inactivo el sensor?
+
+adxl.setTapDetectionOnXYZ(0, 0, 1); 
+// Detección de pulsaciones en las 
+// direcciones encendidas (ON)
+// "adxl.setTapDetectionOnX(X, Y, Z);" 
+// (1 == ON, 0 == OFF)
+
+// Fijar los valores de lo que es
+// una pulsación y una doble (0-255)
+adxl.setTapThreshold(50);
+// 62.5 mg por incremento
+adxl.setTapDuration(15);
+// 625 micro s. por incremento
+adxl.setDoubleTapLatency(80);
+// 1.25 ms por incremento
+adxl.setDoubleTapWindow(200);
+// 1.25 ms por incremento
+
+// Dijar valores de lo que es
+// considerado caída libre (0-255)
+// (5-9) recomendado
+// 62.5mg por incremento
+adxl.setFreeFallThreshold(7);
+
+// (20-70) recomendado
+// 5 ms per increment
+adxl.setFreeFallDuration(30);
+
+
+// Enciende los interruptor para cada
+// modo (1 == ON, 0 == OFF)
+adxl.InactivityINT(1);
+adxl.ActivityINT(1);
+adxl.FreeFallINT(1);
+adxl.doubleTapINT(1);
+adxl.singleTapINT(1);
+
+}
+
+\end{verbatim}
+
+\subsubsection{Código principal}
+
+El código principal de todo script de Arduino se define en la función \texttt{void loop()}, como su nombre lo dice, este código se repite indefinidamente. Una vez que se ha cargado un código en la placa Arduino, este se seguirá ejecutanto hasta que se agregue otro nuevo y haya fuente de poder, independientemente si se ha cerrado el IDE. 
+
+El código principal es muy simple, lee los valores que ha captado el acelerómetro mediante la función \texttt{adxl.readAccel()} y comprueba si ha ocurrido un \textit{evento} en los \textit{interruptores} (como \textit{inactivity}, \textit{activity}, \textit{single-tap}, \textit{free-fall}, etc.) con la función \texttt{ADXL\_ISR}.
+
+\begin{verbatim}
+/**** CÓDIGO PRINCIPAL ****/
+/* Lecturas e interruptores */
+
+void loop(){
+
+// Lecturas del acelerómetro
+int x,y,z;
+// Lee los valores del acelerómetro y los
+// almacena en las variables declaradas
+// arriba (x,y,z)
+adxl.readAccel(&x, &y, &z); 
+
+
+// Envía los resultados
+// de salida al Serial
+Serial.print(x);
+Serial.print(", ");
+Serial.print(y);
+Serial.print(", ");
+Serial.println(z); 
+
+// AGREGAR la siguiente línea de código.
+// Sirve para hacer una pausa en miliseg.
+// que se especifique en el argumento
+// de la función delay().
+// Si se introduce delay(1000), pasará
+// 1 seg. hasta que se ejecute de nuevo
+// la función void loop().
+
+delay(10);
+
+ADXL_ISR();
+// Se puede evitar usar los
+// interruptores y simplemente correr
+// las funciones definidas en 
+// ADXL_ISR(); de manera individual.
+// Si se opta por eso, quitar esta línea.
+// ADXL_ISR(); sólo junta las funciones.
+// Puede ser muy útil cuando no
+// importa cuándo ocurre la acción.
+
+}
+
+\end{verbatim}
+Justo debajo del cierre de la función \texttt{void loop()} se define \texttt{ADXL\_ISR}. Como ya se dijo, sirve para comprobar si ha ocurrido un evento en los interruptores. Se puede evitar usar los \textit{interruptores de eventos} y simplemente correr las funciones que están en esta función de manera individual. Esto puede ser muy útil cuando no importa cuándo ocurre la acción. \texttt{ADXL\_ISR} sólo junta las funciones y las ejecuta cuando \texttt{adxl.triggered()} ha devuelto \small{\texttt{TRUE}}.
+
+\small{
+\begin{verbatim}
+
+void ADXL_ISR() {
+
+/**** ISR ****/
+// Busca interrupciones y acciones
+  
+// getInterruptSource limpia las acciones
+// llamadas. No llamar de nuevo a menos
+// de que se necesite.
+
+byte accInt = adxl.getInterruptSource();
+  
+  
+// Detección de caída libre
+if(adxl.triggered(accInt, ADXL345_FREE_FALL)){
+	Serial.println("*** FREE FALL ***");
+    // Agregar código cuando se 
+    // detecte caída libre 
+} 
+  
+  // Inactividad
+if(adxl.triggered(accInt, ADXL345_INACTIVITY)){
+    Serial.println("*** INACTIVITY ***");
+	// Agregar código cuando se 
+    // detecte inactividad
+}
+  
+// Actividad
+if(adxl.triggered(accInt, ADXL345_ACTIVITY)){
+    Serial.println("*** ACTIVITY ***"); 
+    // Agregar código cuando se 
+    // detecte actividad
+}
+  
+  // Detección de doble pulsación
+if(adxl.triggered(accInt, ADXL345_DOUBLE_TAP)){
+    Serial.println("*** DOUBLE TAP ***");
+    // Agregar código cuando se 
+    // detecte doble pulsación
+}
+  
+  // Detección de pulsación
+if(adxl.triggered(accInt, ADXL345_SINGLE_TAP)){
+    Serial.println("*** TAP ***");
+    // Agregar código cuando se 
+    // detecte pulsación simple
+} 
+
+}
+
+\end{verbatim}
+}
+
+\subsection{SparkFun\_ADXL345\_Calibration.ino}
+
+Antes de explicar el código de la calibración, debemos conocer la parte teórica de esta etapa. Luego veremos cómo se aplica la teoría en el código y por último el proceso de calibración.
+
+\subsubsection{Marco teórico}
+Cuando se combinan errores debidos al desplazamiento y la falta de coincidencia de sensibilidad, el error puede llegar a  ser superior a los límites aceptables en una aplicación de detección de aceleración. Para reducir este error, el desplazamiento y la sensibilidad deben ser calibrados. 
+El acelerómetro, registra \textit{aceleraciones brutas} o aceleraciones de salida, es decir, lecturas que pueden estar afectadas por las señales de otros aparatos electrónicos o una mala colocación del dispositivo. Es por ello que todos los sensores electrónicos se deben someter a un proceso de \textbf{calibración}.
+
+Estos errores deben de ser calibrados con la siguiente fórmula:
+
+$$ A_{OUT} [g] = A_{OFF} +  ( Gain \times A_{ACTUAL} )  $$
+
+Donde:\\
+$g$ es el valor de la aceleración de la gravedad.\\
+$A_{OFF}$ es el error por desplazamiento, en $g$.\\
+$Gain$ es la ganancia del acelerómetro, idealmente un valor de 1.\\
+$A_{ACTUAL}$ es la aceleración actuando en el acelerómetro y el valor deseado, en $g$.\\
+
+Un método de calibración preciso, es usar dos puntos por eje de interés. Cuando un eje está colocado en un campo de $+1g$ y $-1g$, las medidas de salida son las que siguen:
+
+\begin{eqnarray}
+A_{+1g} [g] = A_{OFF} + (1g \times Gain) \label{ec:a+1g} \\
+A_{-1g} [g] = A_{OFF} - (1g \times Gain) \label{ec:a-1g}
+\end{eqnarray}
+
+Si sistituímos (\ref{ec:a+1g}) en (\ref{ec:a-1g}) para expresar \textit{Gain} y \textit{Offset} en términos de las aceleraciones de los campos, obtenemos:
+
+\begin{eqnarray}
+Offset_{eje} = 0.5 \times (A_{+1g} + A_{-1g}) \label{ec:offsetEje}\\
+Gain_{eje} = 0.5 \times ((A_{+1g} - A_{-1g})/1_{g}) \label{ec:gainEje}
+\end{eqnarray}
+
+Este tipo de calibración también ayuda a minimizar los efectos de sensibilidad en ejes cruzados, como son los ejes ortogonales en un campo de $0g$ cuando se hacen medidas para el eje de interés. Estos valores son calculados obteniendo el valor del desplazamiento (\textit{offset}) de la medición con el acelerómetro y posteriormente dividiendo el resultado por la ganancia (\textit{gain}).
+
+$$ A_{ACTUAL} [g] = \frac{A_{OUT}-A_{OFF}}{Gain} $$
+
+donde $A_{OUT}$ y $A_{OFF}$ están en $g$.
+
+La colocación del acelerómetro para obtener las lecturas $A_{+1g} [g]$ y $A_{-1g} [g]$ debe ser la siguiente:
+
+
+\begin{figure}[htbp]
+	\begin{center}
+		\includegraphics[scale=0.7]{orientacion.PNG} % Figure image
+		\caption{Ejes de sensibilidad de aceleración.} % Figure caption
+		\label{fig:orient}
+	\end{center}
+\end{figure}
+
+
+\begin{figure}[htbp]
+	\begin{center}
+		\includegraphics[scale=0.7]{campos.png} % Figure image
+		\caption{Respuesta de salida vs. Orientación de la gravedad.}
+		\label{fig:campos}
+	\end{center}
+\end{figure}
+
+\subsubsection{Inicialización}
+
+Al igual que el sketch \textit{SparkFun\_ADXL345\_Example.ino}, también se tiene:
+
+\begin{verbatim}
+#include <SparkFun_ADXL345.h>
+// Incluye la librería de SparkFun
+
+/**** SELECCIÓN DE COMUNICACIÓN ****/
+/* Descomente la línea no usada */
+//ADXL345 adxl = ADXL345(10); // SPI 
+ADXL345 adxl = ADXL345(); // I2C 
+\end{verbatim}
+
+Recordar comentar la primera línea para usar la comunicación \textit{I2C}. Luego se definen las variables globales del sketch que almacenarán los datos.
+
+\begin{verbatim}
+/**** VARIABLES	 ****/
+// Estas variables almacenarán las
+// lecturas temporales del acelerómetro
+int AccelMinX = 0;
+int AccelMaxX = 0;
+int AccelMinY = 0;
+int AccelMaxY = 0;
+int AccelMinZ = 0;
+int AccelMaxZ = 0; 
+
+int accX = 0;
+int accY = 0;
+int accZ = 0;
+
+/**** VARIABLES DEFINIDAS ****/
+// Estos son los factores para corregir
+// las lecturas del acelerómetro.
+// Estos valores estarán cambiando al
+// calibrar un eje.
+
+// Valores OFFSET
+#define offsetX   -123       
+#define offsetY   -16
+#define offsetZ   -10
+
+// Factores GAIN
+#define gainX     133
+#define gainY     261
+#define gainZ     248
+
+\end{verbatim}
+
+Los valores que se asignan en las instrucciones anteriores, deberán ser modificados de acuerdo a lo visto en el marco teórico y en la posterior explicación del código.
+
+\subsubsection{Configuración/Setup}
+
+A diferencia del \textit{setup} del sketch \textit{SparkFun\_ADXL345\_Example.ino}, aquí se encuentran menos configuraciones ya que no se usan los \textit{interruptores de eventos}.
+
+\begin{verbatim}
+/**** SETUP ****/
+/* Configurar las preferencias de ADXL345 */
+
+void setup()
+{
+
+Serial.begin(9600); // Inicia terminal serial
+adxl.powerOn(); // Enciende el ADXL345
+adxl.setRangeSetting(16);           
+    // Configuraciones de rango
+    // Valores aceptados: 2g, 4g, 8g or 16g
+    // Valores altos = Amplio rango de medida
+    // Valores bajos = Sensibilidad mayor
+                                      
+adxl.setSpiBit(0);                  
+// Configura el dispositivo para modo 
+// 4 wire SPI cuando está en '0', o el
+// modo 3 wire SPI mode cuando está en 1                                    
+// Default: Iniciado en 0
+}
+
+\end{verbatim}
+
+
+\subsubsection{Código principal}
+
+El siguiente código contenido en \texttt{void loop()} se ejecutará de manera repetitiva, pero de manera controlada. Cuando el usuario ejecute el sketch, en la salida serial el programa pedirá que se envíe cualquier caracter (escribir cualquier caracter en el campo que se encuentra al lado de la tecla \textit{Enviar/Send} y luego pulsarla), y ahora sí se ejecutará el código, con el fin de tener tiempo para anotar las lecturas que se arroje.
+El código principal leerá los valores máximos y mínimos del acelerómetro. Con estos datos se podrá calcular los valores \textit{OFFSET} y los factores \textit{GAIN} devolviendo las nuevas lecturas calibradas del acelerómetro.
+
+\begin{verbatim}
+/**** CÓDIGO PRINCIPAL ****/
+/* Lecturas del acelerómetro */
+
+void loop()
+{
+  Serial.println("Envía cualquier caracter");
+  // Espera a que sea enviado un caracter  
+  while (!Serial.available()){}
+  Serial.println();
+  
+  int x,y,z;
+  // Lee los valores del acelerómetro y los
+  // almacena en las variables declaradas
+  // arriba (x,y,z)
+  adxl.readAccel(&x, &y, &z);
+    
+  // Bloque de condiciones que sustituyen
+  // obtienen el valor mín. y max. de las
+  // lecturas, relativas a las variables
+  // especificadas antes.
+  
+  if(x < AccelMinX) AccelMinX = x;
+  if(x > AccelMaxX) AccelMaxX = x;
+
+  if(y < AccelMinY) AccelMinY = y;
+  if(y > AccelMaxY) AccelMaxY = y;
+
+  if(z < AccelMinZ) AccelMinZ = z;
+  if(z > AccelMaxZ) AccelMaxZ = z;
+  
+  // Imprime los valores mínimos y máximos
+  // para que el usuario pueda anotarlos.
+  
+  Serial.print("Accel Minimums: "); 
+  Serial.print(AccelMinX); 
+  Serial.print("  ");
+  Serial.print(AccelMinY); 
+  Serial.print("  "); 
+  Serial.print(AccelMinZ);
+  Serial.println();
+  
+  Serial.print("Accel Maximums: ");
+  Serial.print(AccelMaxX);
+  Serial.print("  ");
+  Serial.print(AccelMaxY);
+  Serial.print("  ");
+  Serial.print(AccelMaxZ);
+  Serial.println();
+  
+  /* NOTA: Se deben realizar los cálculos
+  de OFFSET y GAIN de acuerdo al Marco
+  Teórico de este manual o al manual de 
+  SparkFun, donde: 
+  
+  /  offsetEje = 0.5 * (Acel+1g + Accel-1g)
+  /  gainEje = 0.5 * ((Acel+1g - Accel-1g)/1g)
+  
+  Los valores obtenidos, se deben sustituir
+  en los valores de las variables: offsetX,
+  offsetY, offsetZ, gainX, gainY y gainZ.*/
+
+  // Descomentar la sección
+  // para ver los valores nuevos
+  // una vez que se hayan sustituido
+  // los valores OFFSET y GAIN.  
+  //accX = (x - offsetX)/gainX;
+  //accY = (y - offsetY)/gainY;
+  //accZ = (z - offsetZ)/gainZ;
+
+  Serial.print("New Calibrated Values: ");
+  Serial.print(accX);
+  Serial.print("  ");
+  Serial.print(accY);
+  Serial.print("  ");
+  Serial.print(accZ);
+  Serial.println(); 
+  
+  // Limpia el buffer y evita
+  // atasco de memoria.
+  while (Serial.available())
+  {
+    Serial.read();
+  }
+}
+\end{verbatim}
+
+Al cargar el programa en la placa, solo queda seguir el \textbf{proceso de calibración}.
+
+\subsubsection{Procedimiento de calibración}
+
+Ya que conocemos la teoría de la calibración y cómo funciona el sketch, ahora sí podemos calibrar el aparato.
+
+\begin{enumerate}
+\item Antes de tomar las medidas, se debe montar el acelerómetro con el eje Z paralelo a la dirección de la gravedad. Lo que se debe hacer es fijar el acelerómetro en un objeto cúbico pequeño que se pueda mover fácilmente (\textit{caja de calibración}) tal y como se muestra en la figura \ref{fig:montaje}.
+
+\begin{figure}[htbp]
+	\begin{center}
+		\includegraphics[scale=0.84]{montaje.png} % Figure image
+		\caption{Acelerómetro en una Caja de calibración.} % Figure caption
+		\label{fig:montaje}
+	\end{center}
+\end{figure}
+\item Lo que sigue es cargar el sketch \texttt{SparkFun\_ADXL345\_Calibration.ino} en el Arduino y para cada posición en la cual queremos obtener medidas, denemos de dar \textit{click} en el botón \textit{Enviar/Send} de la salida serial y anotar las lecturas de aceleración que aparecen en pantalla.
+\item La figura \ref{fig:campos} nos mostró cuál es el signo de las lecturas de acuerdo a su posición, lo que sigue es colocar la caja de calibración en estas posiciones para obtener $A_{+1g} [g]$ y  $A_{-1g} [g]$ de cada eje, es decir: para calibrar el eje Z, se coloca el acelerómetro como en la figura \ref{fig:montaje} y así se obtendrá la lectura $A_{+1g} [g]$. Al girar la caja 360$^\circ$ alrededor de un eje horizontal (voltear la caja) y tomar la lectura, se obtendrá el valor de $A_{-1g} [g]$ y así sucesivamente para cada eje.
+\item Lo que sigue es recabar los datos obtenidos en un formato como el del \textit{Cuadro \ref{tab:formato}}. Hacer las sustituciones que se presentan en las ecuaciones (\ref{ec:offsetEje}) y (\ref{ec:gainEje}).
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{cU cU cU cU cU}
+\hline
+\hline
+Eje & $+1g$ & $-1g$ & Offset & Gain \\
+\hline
+\hline
+X & & & & \\
+Y & & & & \\
+Z & & & & \\
+\hline
+\hline
+\end{tabular}
+\end{center}
+\caption{Ejemplo de formato para recabar los datos.}
+\label{tab:formato} 
+\end{table}
+
+\item En la sección \texttt{VARIABLES DEFINIDAS} del código, es donde se colocarán las nuevas varibles calculadas para \textit{offset} y \textit{gain}.
+\item Con esto se tendrán los nuevos valores calibrados. Para visualizarlos, comentar la sección del código que se indica. Como comprobación de que todo estuvo bien, cargar el sketch \texttt{SparkFun\_ADXL345\_Example.ino} y al colocar el acelerómetro en la posición de la figura \ref{fig:montaje}, la lectura debe arrojar $1.0$ en el \textit{eje Z}.
+
+\end{enumerate}
+
+\section{Procesando los datos}
+
+¡El prototipo está casi listo!. Hasta este punto solo queda echar a andar el prototipo. Para comenzar a tomar las medidas, se debe quitar el sensor de la \textit{caja de calibración} y fijarlo a la parte superior del edificio.
+
+Una vez que quedó bien fijo, se corre el sketch \texttt{SparkFun\_ADXL345\_Example.ino}, cuando se esté listo, se imponen fuerzas horizontales al edificio. El acelerómetro comenzará a tomar muchas lecturas, entre más datos se tome, de mejor calidad será la gráfica.
+
+El m\'etodo que se sigue para la lectura de datos es el siguiente
+\begin{itemize}
+\item Habilitar la pestaña "monitor serie" , pulsando la ilustraci\'on de la lupa [en la parte superior derecha].
+\item Seleccionar las lecturas que aparecen en la pantalla [para que las lecturas se detengan, se debe desconectar el arduino].
+\end{itemize}
+
+Cuando los datos hayan sido suficientes, se exportan a \textit{Microsoft Excel} para filtrar los datos útiles, ya que solo importa la lectura del eje en el que se le impuso la fuerza horizontal.
+
+Se ejecuta la macro encargada de graficar las aceleraciones por incrementos para que pueda observarse como una animación en tiempo real y ha quedado lista la gráfica \textit{Aceleración-Tiempo} de la parte superior del edificio.
+
+\begin{figure}[htbp]
+	\begin{center}
+		\includegraphics[scale=0.25]{acelerograma.png} % Figure image
+		\caption{Gráfico de aceleración-tiempo obtenida con la macro.} % Figure caption
+	\end{center}
+\end{figure}
+
+\newpage
+\section{Evidencia}
+En la imagen se muestra el prototipo armado completamente, se alcanza a apreciar el programa en ejecución, este es el resultado final del proyecto anteriormente descrito.
+\begin{figure}[htbp]
+	\begin{center}
+		\includegraphics[scale=0.05]{final.jpg} % Figure image
+		\caption{Prototipo finalizado.} % Figure caption
+	\end{center}
+\end{figure}
+
+Adicionalmente en nuestro canal de YouTube tenemos los vídeos donde explicamos cómo armar el prototipo y el objetivo que tiene realizar este proyecto puedes consultarlos en los siguientes links:\\
+\bigskip
+\begin{itemize}
+\item \url{https://www.youtube.com/watch?v=axFKDtJPoAY&t=20s}
+\item \url{https://www.youtube.com/watch?v=Ujp51O7kD9Y}
+\end{itemize}
+
+\section{Bibliografía}
+
+\begin{itemize}
+
+\item \url{https://learn.sparkfun.com/tutorials/adxl345-hookup-guide?_ga=2.79468882.753158234.1503001715-1101855846.1502894452}
+\item \url{https://www.sparkfun.com/datasheets/Sensors/Accelerometer/ADXL345.pdf?_ga=2.121653902.402602786.1503437850-822822752.1503333391}
+\item \url{http://panamahitek.com/acelerometros-de-3-ejes-lo-que-necesitas-saber/}
+\item \url{https://hetpro-store.com/TUTORIALES/modulo-acelerometro-y-giroscopio-mpu6050-i2c-twi/}
+\item \url{http://fuenteabierta.teubi.co/2013/03/inclinometro-digital-con-arduino-uso-de.html}
+\item \url{https://robologs.net/2014/10/15/tutorial-de-arduino-y-mpu-6050/}
+\item \url{https://www.luisllamas.es/arduino-acelerometro-adxl345/}
+\item \url{http://www.techmake.com/tutorialadxl345_cal}
+\item \url{https://aprendiendoarduino.wordpress.com/tag/i2c/}
+\item \url{https://www.youtube.com/watch?v=FhQrCidZ3S0}
+\item \url{https://www.youtube.com/watch?v=DluccYiusG8}
+\item \url{https://www.sparkfun.com/datasheets/Sensors/Accelerometer/ADXL345.pdf}
+\item \url{https://masteringelectronicsdesign.com/an-adc-and-dac-least-significant-bit-lsb/}
+
+\end{itemize}
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+
+%\printbibliography[title={Bibliography}] % Print the bibliography, section title in curly brackets
+
+%----------------------------------------------------------------------------------------
+
+\end{document}
